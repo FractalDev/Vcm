@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Vue Single Js Component Manager</title>
+    <script src="js/axios-0.19.0.js"></script>
+    <script src="js/vue-2.6.8.js"></script>
+    <script src="js/vcm.js"></script>
+    <script>
+    document.addEventListener('DOMContentLoaded', function(){
+
+        Vcm.singleton('$singleton', 'js/vcm/singleton.js');
+        Vcm.global('global', 'js/vcm/global.js');
+
+        let model = {
+            param : {
+                from : 'app',
+            },
+        };
+
+        let app = new Vue({
+            el : '#app',
+            data : model,
+            components : {
+                'local' : Vcm.local('js/vcm/local.js'),
+            },
+        });
+    });
+    </script>
+</head>
+<body>
+<div id="app">
+    <div>Vue Single Js Component Manager</div>
+    <global></global>
+    <local></local>
+</div>
+</body>
+</html>
