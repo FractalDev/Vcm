@@ -1,96 +1,100 @@
 # Vcm
 Vue Single Js Component Manager, Standalone, without webpack / npm / node
 
+[中文 README](https://github.com/FractalDev/Vcm/blob/master/README.zhcn.md)
+
 # 前言
-Vue 的单文件组件（Single File Component）看着十分诱人，But 必须要上 webpack  
-webpack 的新人友好度太低，心有不甘，捣腾一番就有了这个 Vcm (Vue Single Js Component Manager)  
-不需要 webpack / npm / nodejs 也能轻松愉快的用上 单JS文件组件  
+Vue `SFC` （Single File Component）is awesome, but it require `Webpack`  
+`Webpack` is not friendly to newbie, i work several days, make this `Vcm` (Vue Single Js Component Manager)  
+enjoy `Vue Single Js Component` without webpack / npm / nodejs
 
-# 快速入门
+# Quick Start
 
-单例组件
+Singleton Component
 ```
-是一种特殊的全局组件，和 Vue 插件有点相似，只不过 Vue 插件可以有更多其他功能  
-Vcm 会保证只生成一个实例，不需要额外代码  
-单例组件 export 方法注册到 Vue.prototype，所有组件实例都可直接访问到  
-最常见的使用场景就是 弹框信息组件
+Singleton Component is special kind of Global Component, a little bit like Vue Plugin, but Vue Plugin can do more things.  
+do not need any extra code for singleton instance, Vcm make it done.  
+Singleton Component export methods, register to Vue.prototype, all component can access these methods.  
+The most common usage : Toast
 ```
 
-单例组件 / 全局组件 / 局部组件 定义，定义方式基本完全一样
+Singleton Component / Global Component / Local Component, all these component's code are almost the same
 ```js
-// 创建单JS组件实例
+// create single js component instance
 let component = Vcm.create();
-// 这个就是 new Vue() 的参数
+// options is same as param in new Vue() 
 component.options = {
-    // 平常怎么写，就怎么写
-    // 按 Vue 文档，组件的 data 必须是个函数
+    // anything just like you coding common Vue component
+    // component data must be a method , as Vue doc says
     data : function(){
         return {};
     },
 }
-// 组件样式，字符串 或者 数组
+// component style, string or array
 component.style = [
 ];
-// 定义 单例组件 导出方法，单例组件 有这部分，全局组件 / 局部组件 没有
+// singleton component export methods, Global Component / Local Component has no such part
 component.export = {
-    method : function(){}，
+    method : function(){},
 };
+// return component info
+return component;
 ```
-html 文件内
+html
 ```js
-// 单例组件
+// import singleton component
 Vcm.singleton('$singleton', 'js/vcm/singleton.js');
-// 全局组件
+// import global component
 Vcm.global('global', 'js/vcm/global.js');
 
 let app = new Vue({
     el : '#app',
     data : {},
     components : {
-        // 局部组件
+        // import local component
         'local' : Vcm.local('js/vcm/local.js'),
     },
 });
 ```
-组件内 引入 子组件
+sub local component
 ```js
 // js/vcm/local.js
 components : {
-    // 这里用的是相对于当前组件（js文件）的相对路径
+    // sub.js is relative to component instance
     'local-sub' : component.local('sub.js'),
-    // 这里用的是相对于页面的相对路径，路径部分下面会有详细文档
+    // local-base.js is relative to page base uri
     'local-base' : Vcm.local('local-base.js'),
 },
 ```
 
-# 技术细节
+# Detail Doc
 
-`1` 依赖
+`1` Depend
 ``` html
-只需要 Vue 和 axios 两个库 和 Vcm 本身  
+only require Vue & axios & Vcm    
 <script src="js/axios-0.19.0.js"></script>  
 <script src="js/vue-2.6.8.js"></script>  
 <script src="js/vcm.js"></script>
 ```
-`2` 路径
+`2` Path
 ```js
-页面文件 : http://vcm.demo/path/index.html 
-基准路径 : http://vcm.demo/path  
-根路径　 : http://vcm.demo  
-组件文件 : http://vcm.demo/path/js/vcm/test.js  
+Html      : http://vcm.demo/path/index.html 
+Base      : http://vcm.demo/path  
+Root　    : http://vcm.demo  
+Component : http://vcm.demo/path/js/vcm/test.js  
 ```
 ```
-引入 JS 组件文件时支持以下路径方式：
+Path mode for import Js Component：
 
-           前缀    Vcm 方法 singleton/global/local  组件方法 local
-相对路径     ''     http://vcm.demo/path            http://vcm.demo/path/js/vcm
-基准路径    '/'     http://vcm.demo/path            http://vcm.demo/path
-根路径　   '//'     http://vcm.demo                 http://vcm.demo
+          prefix    Vcm singleton/global/local  component.local
+Relative      ''    http://vcm.demo/path        http://vcm.demo/path/js/vcm
+Base         '/'    http://vcm.demo/path        http://vcm.demo/path
+Root 　     '//'    http://vcm.demo             http://vcm.demo
 
-绝对路径   'http://domain/path/absolute.js' 不做转换，直接使用
+Absolute 'http://domain/path/absolute.js' , juse use it
 ```
 ```
-Vcm 方法 singleton/global/local
+Sample : Vcm singleton/global/local
 
   'js/vcm/foo.js' => http://vcm.demo/path/js/vcm/foo.js
  '/js/vcm/foo.js' => http://vcm.demo/path/js/vcm/foo.js
@@ -99,7 +103,7 @@ Vcm 方法 singleton/global/local
 'http://domain/path/absolute.js' => http://domain/path/absolute.js
 ```
 ```
-组件方法 local ( 组件 js 路径 http://vcm.demo/path/js/vcm/test.js )
+Sample component.local ( component js url : http://vcm.demo/path/js/vcm/test.js )
 
   'foo.js' => http://vcm.demo/path/js/vcm/foo.js
  '/foo.js' => http://vcm.demo/path/foo.js
@@ -108,59 +112,59 @@ Vcm 方法 singleton/global/local
 'http://domain/path/absolute.js' => http://domain/path/absolute.js
 ```
 
-`3` 单例组件 / 全局组件 / 局部组件 / 子组件 引入方式
+`3` method doc
 ```js
 /**  
- * 单例组件  
- * @param $name 变量名，被注册到 Vue.prototype  
- * @param $uri  js文件路径 (参考上一节 路径)  
- * @param $dom  dom引用 单例组件将被插入到哪个dom节点下 (默认为 document.body)  
+ * Singleton Component
+ * @param $name Variable Name, register to Vue.prototype  
+ * @param $uri  js uri  
+ * @param $dom  dom, Singleton Component will append to this node ( default is document.body )  
  */  
 Vcm.singleton($name, $uri, $dom);
 ```
 ```js
 /**  
- * 全局组件  
- * @param $tag html标签名  
- * @param $uri js文件路径 (参考上一节 路径)  
+ * Global Component  
+ * @param $tag html tag name  
+ * @param $uri js uri  
  */  
 Vcm.global($tag, $uri);
 ```
 ```js
 /**  
- * 局部组件  
- * @param $uri js文件路径 (参考上一节 路径)  
+ * Local Component  
+ * @param $uri js uri  
  */  
 Vcm.local($uri);
 ```
 ```js
 /**  
- * 组件内引用子组件  
- * @var   component js组件实例  
- * @param $uri      js文件路径 (参考上一节 路径)  
- */ 
+ * Sub Local Component
+ * @var   component js component instance  
+ * @param $uri      js uri  
+ */ sonly
 component.local($uri);
 ```
 
-`4` 引入子组件的两种方法
+`4` tow way to import sub local component
 
-    页面URL    : http://vcm.demo/path/index.html  
-    组件JS URL : http://vcm.demo/path/js/vcm/local.js
+    page url         : http://vcm.demo/path/index.html  
+    component js url : http://vcm.demo/path/js/vcm/local.js
 
-    1. 组件实例方法   component.local('sub.js') => http://vcm.demo/path/js/vcm/sub.js 
-    2. Vcm.local     Vcm.local('sub.js')       => http://vcm.demo/path/sub.js
+    1. component instance method   component.local('sub.js') => http://vcm.demo/path/js/vcm/sub.js 
+    2. Vcm.local                   Vcm.local('sub.js')       => http://vcm.demo/path/sub.js
 
-`5` 样式
+`5` style
 
-    目前只支持直接的 CSS 语法, scoped style 尚不支持 
-    所有组件的 css 各自被创建并插入到 HEAD 节点下  
-    <style type="text/css" data-uri="这里是组件JS的绝对 URI，方便调试">  
+    only support css, scoped style not support yet
+    each component's css be created and append to HEAD
+    <style type="text/css" data-uri="component absolute uri for debug">  
 
-`6` 加载 及 加载顺序
+`6` loading & loading order
 
-    单JS组件的 js 都通过 ajax 进行异步加载  
-    全局组件 和 局部组件 使用了 Vue 的异步加载机制  
-    Vcm 会保证 单例组件 只有一个实例  
-    Vcm 会保证 单例组件 在 全局组件 和 局部组件 之前加载完成  
+    Single Js Component load asynchronously by ajax
+    Global Component & Local Component use Vue async load mode
+    Vcm make Singleton Component only one instance
+    Vcm make sure Singleton Component loaded before Global Component & Local Component  
 
 ### More ###
