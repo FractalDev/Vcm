@@ -3,7 +3,6 @@ Vue Single Js Component Manager, Standalone, without webpack / npm / node
 
 [中文 README](https://github.com/FractalDev/Vcm/blob/master/README.zhcn.md)
 
-# 前言
 Vue `SFC` （Single File Component）is awesome, but it require `Webpack`  
 `Webpack` is not friendly to newbie, i work several days, make this `Vcm` (Vue Single Js Component Manager)  
 enjoy `Vue Single Js Component` without webpack / npm / nodejs
@@ -158,6 +157,7 @@ component.local($uri);
 
     only support css, scoped style not support yet
     each component's css be created and append to HEAD
+    
     <style type="text/css" data-uri="component absolute uri for debug">  
 
 `6` loading & loading order
