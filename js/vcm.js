@@ -116,12 +116,12 @@
             switch(match[2].length)
             {
                 case 0:
-                    return $base + '/' + $uri;
+                    return $base + '/' + match[3];
                 case 1:
-                    return $.uri.base + '/' + $uri;
+                    return $.uri.base + '/' + match[3];
             }
 
-            return $.uri.root + '/' + $uri;
+            return $.uri.root + '/' + match[3];
         };
 
         $.vcm.create_style = function($component){
